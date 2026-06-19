@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resonance — See what your data already knows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5EFE6;
+    --cream-deep: #EDE5D8;
+    --orange: #E8632A;
+    --orange-light: #F2A06A;
+    --orange-pale: #FAE5D6;
+    --teal: #4AADA8;
+    --teal-dark: #2A7D7A;
+    --teal-pale: #D8F0EF;
+    --navy: #1C2B3A;
+    --slate: #3D5166;
+    --muted: #6B7F8E;
+    --border: rgba(28,43,58,0.12);
+    --card: #FFFFFF;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  nav {
+    background: var(--navy);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .nav-logo-text {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.4px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
+  .nav-links a {
+    padding: 7px 16px;
+    border-radius: 9999px;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .nav-cta {
+    margin-left: 20px;
+    padding: 9px 22px;
+    border-radius: 9999px;
+    background: var(--orange);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: #D4561F; }
+  .hero {
+    padding: 100px 40px 80px;
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal-pale);
+    color: var(--teal-dark);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+  }
+  .hero-eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+  .hero h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--navy);
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: normal; color: var(--teal); }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--slate);
+    line-height: 1.65;
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    background: var(--orange);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary:hover { background: #D4561F; transform: scale(1.02); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 24px;
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: rgba(28,43,58,0.3); background: rgba(28,43,58,0.04); }
+  .hero-trust {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .hero-trust-avatars { display: flex; }
+  .hero-trust-avatars span {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: -6px;
+  }
+  .hero-trust-avatars span:first-child { margin-left: 0; background: var(--teal); }
+  .hero-trust-avatars span:nth-child(2) { background: var(--orange); }
+  .hero-trust-avatars span:nth-child(3) { background: var(--navy); }
+  .hero-trust-avatars span:nth-child(4) { background: #6B7F8E; }
+  .section {
+    padding: 80px 40px;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    max-width: 540px;
+  }
+  .section-sub {
+    font-size: 17px;
+    color: var(--slate);
+    max-width: 520px;
+    margin-bottom: 56px;
+    line-height: 1.65;
+  }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .step-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s;
+  }
+  .step-card:hover { transform: translateY(-2px); }
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .step-card:hover::before { opacity: 1; }
+  .step-number {
+    font-family: 'Sora', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--cream-deep);
+    line-height: 1;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+  }
+  .step-time {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    background: var(--teal-pale);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-bottom: 14px;
+  }
+  .step-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .step-card p { font-size: 15px; color: var(--slate); line-height: 1.6; }
+  .divider { background: var(--cream-deep); height: 1px; margin: 0 40px; }
+  .stats-band { background: var(--navy); padding: 64px 40px; }
+  .stats-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .stat-item { text-align: center; }
+  .stat-number {
+    font-family: 'Sora', sans-serif;
+    font-size: 56px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+  }
+  .stat-number span { color: var(--orange-light); }
+  .stat-label {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  .methodology {
+    padding: 80px 40px;
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .method-visual {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 40px;
+    border: 1px solid var(--border);
+  }
+  .method-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+  .method-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .method-body {
+    font-size: 16px;
+    color: var(--slate);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .method-points { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .method-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--slate);
+  }
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--teal-pale);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .use-cases { background: var(--cream-deep); padding: 80px 40px; }
+  .use-cases-inner { max-width: 1160px; margin: 0 auto; }
+  .use-case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .use-case-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border);
+    transition: transform 0.15s;
+  }
+  .use-case-card:hover { transform: translateY(-2px); }
+  .use-case-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--teal-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .use-case-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+  .use-case-card p { font-size: 15px; color: var(--slate); line-height: 1.6; }
+  .cta-section {
+    padding: 100px 40px;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .cta-section h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1.2px;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .cta-section h2 em { font-style: normal; color: var(--teal); }
+  .cta-section p {
+    font-size: 18px;
+    color: var(--slate);
+    line-height: 1.65;
+    margin-bottom: 40px;
+  }
+  footer {
+    background: var(--navy);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .footer-logo-text { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .footer-meta { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-meta a { color: rgba(255,255,255,0.55); text-decoration: none; }
+  .footer-meta a:hover { color: #fff; }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 48px; }
+    .hero h1 { font-size: 38px; }
+    .steps { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: 1fr; gap: 32px; }
+    .methodology { grid-template-columns: 1fr; gap: 40px; }
+    .use-case-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="images/logotype.svg" alt="Resonance" height="40">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#use-cases">Use cases</a></li>
+  </ul>
+  <a href="https://appresonance.vercel.app" class="nav-cta">Get started</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      AI-powered concept testing
+    </div>
+    <h1>Your data holds<br>the answers.<br><em>Resonance brings<br>them into focus.</em></h1>
+    <p class="hero-sub">Resonance builds digital twins of your target audience and evaluates new product concepts in seconds—giving you directional signal before you commit to a full study.</p>
+    <div class="hero-actions">
+      <a href="https://appresonance.vercel.app" class="btn-primary">
+        Get started
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="mailto:sam@aldermanandward.com" class="btn-ghost">Schedule a call</a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-trust-avatars">
+        <span>MR</span>
+        <span>AL</span>
+        <span>JK</span>
+        <span>SW</span>
+      </div>
+      Trusted by researchers and innovation teams
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <svg viewBox="0 0 440 440" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;margin:0 auto;">
+      <circle cx="220" cy="220" r="210" stroke="#E8D5C4" stroke-width="1" stroke-dasharray="4 8"/>
+      <circle cx="220" cy="220" r="185" stroke="#DDD0C4" stroke-width="1"/>
+      <circle cx="220" cy="220" r="158" stroke="#C8D8E0" stroke-width="1.5"/>
+      <circle cx="220" cy="220" r="130" stroke="#4AADA8" stroke-width="1.5" opacity="0.35"/>
+      <circle cx="220" cy="220" r="103" stroke="#4AADA8" stroke-width="2" opacity="0.55"/>
+      <circle cx="220" cy="220" r="76" stroke="#4AADA8" stroke-width="2.5" opacity="0.75"/>
+      <circle cx="220" cy="220" r="50" stroke="#4AADA8" stroke-width="3"/>
+      <line x1="220" y1="62" x2="220" y2="378" stroke="#4AADA8" stroke-width="0.75" opacity="0.18"/>
+      <line x1="62" y1="220" x2="378" y2="220" stroke="#4AADA8" stroke-width="0.75" opacity="0.18"/>
+      <circle cx="220" cy="220" r="18" fill="#D8F0EF"/>
+      <circle cx="220" cy="220" r="10" fill="#4AADA8"/>
+      <circle cx="220" cy="220" r="4" fill="#fff"/>
+      <circle cx="312" cy="148" r="30" fill="#FAE5D6" stroke="#E8632A" stroke-width="2"/>
+      <text x="312" y="144" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#E8632A">Pete P.</text>
+      <text x="312" y="158" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#D4561F">WTU 4.2</text>
+      <circle cx="138" cy="148" r="30" fill="#FAE5D6" stroke="#E8632A" stroke-width="2"/>
+      <text x="138" y="144" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#E8632A">Sue R.</text>
+      <text x="138" y="158" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#D4561F">WTU 3.8</text>
+      <circle cx="330" cy="298" r="30" fill="#FAE5D6" stroke="#E8632A" stroke-width="2"/>
+      <text x="330" y="294" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#E8632A">Anna A.</text>
+      <text x="330" y="308" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#D4561F">WTU 4.7</text>
+      <circle cx="128" cy="300" r="30" fill="#FAE5D6" stroke="#E8632A" stroke-width="2"/>
+      <text x="128" y="296" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="600" fill="#E8632A">Randy R.</text>
+      <text x="128" y="310" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="#D4561F">WTU 3.4</text>
+      <line x1="286" y1="165" x2="236" y2="208" stroke="#E8632A" stroke-width="1" opacity="0.3" stroke-dasharray="3 5"/>
+      <line x1="162" y1="165" x2="206" y2="208" stroke="#E8632A" stroke-width="1" opacity="0.3" stroke-dasharray="3 5"/>
+      <line x1="305" y1="278" x2="238" y2="232" stroke="#E8632A" stroke-width="1" opacity="0.3" stroke-dasharray="3 5"/>
+      <line x1="152" y1="284" x2="204" y2="234" stroke="#E8632A" stroke-width="1" opacity="0.3" stroke-dasharray="3 5"/>
+      <rect x="158" y="374" width="124" height="40" rx="20" fill="#1C2B3A"/>
+      <text x="220" y="389" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="500" fill="rgba(255,255,255,0.5)">Panel avg. WTU</text>
+      <text x="220" y="405" text-anchor="middle" font-family="Sora, sans-serif" font-size="13" font-weight="700" fill="#4AADA8">4.0 / 5.0</text>
+    </svg>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="how-it-works">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">From target audience to directional insight in three steps</h2>
+  <p class="section-sub">Define your audience, enter your concepts, and get scored feedback with qualitative reasoning in under a minute.</p>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-number">01</div>
+      <span class="step-time">5 minutes</span>
+      <h3>Define your audience</h3>
+      <p>Build personas from demographic and psychographic inputs—age, occupation, income, Big Five personality traits, needs, and pain points. Start from a template or configure your own. Enrich with real respondent data when you have it.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">02</div>
+      <span class="step-time">60 seconds</span>
+      <h3>Run the evaluation</h3>
+      <p>Each digital twin evaluates your new product concepts using Semantic Similarity Rating methodology, generating Willingness to Use and Willingness to Pay scores with qualitative reasoning.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">03</div>
+      <span class="step-time">Immediately</span>
+      <h3>Act on the signal</h3>
+      <p>Get directional insights before committing to a full study. Screen concepts early, rank variants, and focus your research budget where it matters most.</p>
+    </div>
+  </div>
+</section>
+
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">0.85<span>+</span></div>
+      <div class="stat-label">Correlation with real purchase intent, validated by published research</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number"><span>&lt;</span>60s</div>
+      <div class="stat-label">Time to evaluate a new concept against your full persona panel</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">&#8734;</div>
+      <div class="stat-label">Product concepts testable from a single configured persona panel</div>
+    </div>
+  </div>
+</div>
+
+<section class="methodology" id="methodology">
+  <div class="method-visual">
+ <img src="images/ssr_embedding_diagram.svg" alt="methodology" height="300px" >
+  </div>
+
+  <div>
+    <div class="method-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 4v3M6 8.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Validated methodology
+    </div>
+    <h2 class="method-title">Grounded in published research</h2>
+    <p class="method-body">Resonance uses Semantic Similarity Rating (SSR), a method developed by Maier et al. (arXiv:2510.08338). SSR measures cosine similarity between vector embeddings of synthetic survey responses and Likert scale reference statements to produce statistically grounded scores. The more precisely a persona is calibrated to a real audience—through demographic and psychographic data—the stronger the signal.</p>
+    <ul class="method-points">
+      <li>
+        <div class="check-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        Digital twins calibrated to your target demographic—enriched with real respondent data when available
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        WTU and WTP scores with full probability distributions
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        Complementary to existing research workflows
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        0.85+ correlation with real purchase intent
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="use-cases" id="use-cases">
+  <div class="use-cases-inner">
+    <div class="section-label">Use cases</div>
+    <h2 class="section-title">Research teams use Resonance to move faster</h2>
+    <p class="section-sub">Whether you're screening early concepts or stretching the life of a completed study, Resonance fits where your existing workflow leaves off.</p>
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#2A7D7A" stroke-width="1.75"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#2A7D7A" stroke-width="1.75"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#2A7D7A" stroke-width="1.75"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#2A7D7A" stroke-width="1.75"/></svg>
+        </div>
+        <h3>Early-stage concept screening</h3>
+        <p>Test a dozen product variants against your audience before investing in a new study. Get ranked scores with persona-level reasoning in under a minute.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Directional signal before you commit</h3>
+        <p>Skip the six-week study for early-stage questions. Resonance gives you scored, persona-level feedback in under a minute—so you can eliminate weak concepts before investing in full research.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2A7D7A" stroke-width="1.75"/><path d="M8 12l2.5 2.5 5-5" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Market entry research</h3>
+        <p>Survey a market once, then use digital twins to evaluate product variations, pricing tiers, and positioning options without re-fielding.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#2A7D7A" stroke-width="1.75"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="#2A7D7A" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Faster client deliverables</h3>
+        <p>For agencies and consultancies: stand up a concept testing capability for clients without fielding a new study. Directional results in the same meeting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Your data holds the answers.<br><em>Let's bring them into focus.</em></h2>
+  <p>Try Resonance now, or schedule a call with the Alderman+Ward team to walk through it together.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <a href="https://appresonance.vercel.app" class="btn-primary">
+      Get started
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="mailto:sam@aldermanandward.com" class="btn-ghost">Schedule a call</a>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="footer-logo">
+    <img src="images/logotype.svg" alt="Resonance" height="24">
+  </a>
+  <div class="footer-meta">
+    © Copyright 2026 <a href="https://aldermanandward.com">Alderman+Ward</a>
+  </div>
+</footer>
+
+</body>
+</html>
